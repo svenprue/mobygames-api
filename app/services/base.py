@@ -9,13 +9,12 @@ from lxml import etree
 from requests import Response, TooManyRedirects
 
 from app.utils.utils import trim
-from app.utils.xpath import Pagination
 
 
 @dataclass
-class TransfermarktBase:
+class MobyGamesBase:
     """
-    Base class for making HTTP requests to Transfermarkt and extracting data from the web pages.
+    Base class for making HTTP requests to MobyGames and extracting data from the web pages.
 
     Args:
         URL (str): The URL for the web page to be fetched.
@@ -190,6 +189,22 @@ class TransfermarktBase:
 
         if isinstance(iloc_from, int) and isinstance(iloc_to, int):
             element = element[iloc_from:iloc_to]
+
+        if isinstance(iloc_to, int):
+            element = element[:iloc_to]
+
+        if isinstance(iloc_from, int):
+            element = element[iloc_from:]
+
+        if isinstance(join_str, str):
+            return join_str.join([trim(e) for e in element])
+
+        try:
+            return trim(element[pos])
+        except IndexError:
+            return None
+
+
 import time
 from typing import List, Optional, Union
 
@@ -239,33 +254,3 @@ class BaseScraper:
 
         # Remove extra whitespace and newlines
         return " ".join(line.strip() for line in text.split("\n") if line.strip())
-        if isinstance(iloc_to, int):
-            element = element[:iloc_to]
-
-        if isinstance(iloc_from, int):
-            element = element[iloc_from:]
-
-        if isinstance(join_str, str):
-            return join_str.join([trim(e) for e in element])
-
-        try:
-            return trim(element[pos])
-        except IndexError:
-            return None
-
-    def get_last_page_number(self, xpath_base: str = "") -> int:
-        """
-        Retrieve the last page number for a paginated result based on the provided base XPath.
-
-        Args:
-            xpath_base (str): The base XPath for extracting page number information.
-
-        Returns:
-            int: The last page number for search results. Returns 1 if no page numbers are found.
-        """
-
-        for xpath in [Pagination.PAGE_NUMBER_LAST, Pagination.PAGE_NUMBER_ACTIVE]:
-            url_page = self.get_text_by_xpath(xpath_base + xpath)
-            if url_page:
-                return int(url_page.split("=")[-1].split("/")[-1])
-        return 1

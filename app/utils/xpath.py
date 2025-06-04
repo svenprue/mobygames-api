@@ -92,11 +92,25 @@ class Critics:
     REVIEW_SCORE = ".//div[@class='reviewScore']/text()"
     REVIEW_TEXT = ".//div[@class='reviewText']/text()"
 
+class Players:
+    SEARCH_RESULTS = "//div[@class='searchResult']"
+    PLAYER_NAME = ".//div[@class='searchTitle']//a/text()"
+    PLAYER_URL = ".//div[@class='searchTitle']//a/@href"
+    PLAYER_ID = ".//div[@class='searchTitle']//a/@href"
+    PLAYER_GAMES_COUNT = ".//div[@class='searchDetails']/text()"
+
+    # Player profile
+    NAME = "//div[@id='playerTitle']/h1/text()"
+    BIO = "//div[@id='playerBio']/div[@class='desc']/text()"
+    KNOWN_ALIASES = "//div[@id='playerAliases']//span[@class='alias']/text()"
+
+    # Player credits
+    CREDITS_SECTION = "//div[@id='playerCredits']"
+    CREDIT_ENTRIES = ".//div[@class='creditEntry']"
+    GAME_TITLE = ".//div[@class='gameTitle']/a/text()"
+    GAME_URL = ".//div[@class='gameTitle']/a/@href"
+    ROLES = ".//div[@class='roles']/span/text()"
+
 class Pagination:
     PAGE_NUMBER_LAST = "//li[contains(@class, 'list-item--icon-last-page')]//@href"
     PAGE_NUMBER_ACTIVE = "//li[contains(@class, 'list-item--active')]//@href"
-
-
-
-
-

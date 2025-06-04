@@ -1,17 +1,28 @@
-REGEX_DOB: str = r"^(?P<dob>.*)\s\((?P<age>\d*)\)"
-REGEX_MEMBERS_DATE: str = r"\(Score: (?P<date>.+)\)"
-REGEX_BG_COLOR: str = r"background-color:(?P<color>.+);"
-REGEX_CHART_CLUB_ID: str = r"(?P<club_id>\d+)"
-REGEX_COUNTRY_ID: str = r"(?P<id>\d)"
-REGEX_DOB_AGE: str = r"^(?P<dob>\w{3} \d{1,2}, \d{4}) \((?P<age>\d{2})\)"
+# MobyGames URL patterns for extracting IDs and other data
 
-REGEX_CLUB_ID: str = r"/verein/(?P<club_id>\d+)"
+# For extracting game IDs from URLs like "https://www.mobygames.com/game/123/game-name"
+REGEX_GAME_ID: str = r"/game/(?P<game_id>\d+)"
 
-# For extracting player IDs from URLs like "https://www.transfermarkt.com/player-name/profil/spieler/28003"
-REGEX_PLAYER_ID: str = r"/spieler/(?P<player_id>\d+)"
+# For extracting company IDs from URLs like "https://www.mobygames.com/company/456/company-name"
+REGEX_COMPANY_ID: str = r"/company/(?P<company_id>\d+)"
 
-# For extracting manager IDs from URLs like "https://www.transfermarkt.com/manager-name/profil/trainer/5672"
-REGEX_MANAGER_ID: str = r"/trainer/(?P<manager_id>\d+)"
+# For extracting person/player IDs from URLs like "https://www.mobygames.com/person/789/person-name"
+REGEX_PERSON_ID: str = r"/person/(?P<person_id>\d+)"
 
-# For parsing dates that might appear in different formats on manager profiles
-REGEX_DATE_FORMAT: str = r"(?P<date>\w{3} \d{1,2}, \d{4}|\d{2}/\d{2}/\d{4}|\d{4}-\d{2}-\d{2})"
+# For extracting group IDs from URLs like "https://www.mobygames.com/group/101/group-name"
+REGEX_GROUP_ID: str = r"/group/(?P<group_id>\d+)"
+
+# For extracting critic IDs from URLs like "https://www.mobygames.com/critic/202/critic-name"
+REGEX_CRITIC_ID: str = r"/critic/(?P<critic_id>\d+)"
+
+# For extracting platform IDs from URLs like "https://www.mobygames.com/platform/303/platform-name"
+REGEX_PLATFORM_ID: str = r"/platform/(?P<platform_id>\d+)"
+
+# For parsing years from text like "(1998)" or "Released: 1998"
+REGEX_YEAR: str = r"(?P<year>\d{4})"
+
+# For parsing game counts from text like "Involved in 42 games"
+REGEX_GAMES_COUNT: str = r"Involved in (?P<count>\d+) games?"
+
+# For parsing review scores from text like "Score: 8.5/10" or "Rating: 4/5"
+REGEX_REVIEW_SCORE: str = r"(?P<score>\d+(?:\.\d+)?)\s*/\s*(?P<max_score>\d+)"
