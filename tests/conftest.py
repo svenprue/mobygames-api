@@ -40,3 +40,49 @@ def regex_integer():
 @pytest.fixture
 def regex_height():
     return Regex(r"^(\d+,\d+m)|(m)$")
+
+
+# New MobyGames-specific fixtures
+@pytest.fixture
+def regex_mobygames_url():
+    return Regex(r"^https://www\.mobygames\.com/.+$")
+
+
+@pytest.fixture
+def regex_game_id():
+    return Regex(r"^\d+$")
+
+
+@pytest.fixture
+def regex_company_id():
+    return Regex(r"^\d+$")
+
+
+@pytest.fixture
+def regex_developer_id():
+    return Regex(r"^\d+$")
+
+
+@pytest.fixture
+def regex_group_id():
+    return Regex(r"^\d+$")
+
+
+@pytest.fixture
+def regex_critic_id():
+    return Regex(r"^\d+$")
+
+
+@pytest.fixture
+def regex_year():
+    return Regex(r"^(\d{4}|-)$")
+
+
+@pytest.fixture
+def regex_score():
+    return Regex(r"^(\d+\.?\d*|-)$")
+
+
+@pytest.fixture
+def regex_http_url():
+    return Regex(r"^https?://.+$")
