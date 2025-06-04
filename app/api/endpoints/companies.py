@@ -6,6 +6,8 @@ from app.schemas import companies as schemas
 from app.services.companies.search import MobyGamesCompanySearch
 from app.services.companies.profile import MobyGamesCompanyProfile
 from app.services.companies.games import MobyGamesCompanyGames
+from app.services.companies.trivia import MobyGamesCompanyTrivia
+from app.services.companies.history import MobyGamesCompanyHistory
 
 router = APIRouter()
 
@@ -29,3 +31,17 @@ def get_company_games(company_id: str, page_number: Optional[int] = 1):
     moby = MobyGamesCompanyGames(company_id=company_id, page_number=page_number)
     company_games = moby.get_company_games()
     return company_games
+
+
+@router.get("/{company_id}/trivia", response_model=schemas.CompanyTrivia, response_model_exclude_defaults=True)
+def get_company_trivia(company_id: str):
+    moby = MobyGamesCompanyTrivia(company_id=company_id)
+    trivia = moby.get_company_trivia()
+    return trivia
+
+
+@router.get("/{company_id}/history", response_model=schemas.CompanyHistory, response_model_exclude_defaults=True)
+def get_company_history(company_id: str):
+    moby = MobyGamesCompanyHistory(company_id=company_id)
+    history = moby.get_company_history()
+    return history

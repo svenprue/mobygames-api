@@ -44,6 +44,9 @@ class GameProfile(GameBase):
     release_date: Optional[str] = None
     developers: List[GameDeveloper]
     publishers: List[GamePublisher]
+    moby_score: Optional[float] = None
+    moby_rank: Optional[float] = None
+    player_count: Optional[str] = None
 
 
 class GameScreenshot(BaseModel):
@@ -73,3 +76,68 @@ class GameCredits(BaseModel):
     game_id: str
     game_name: str
     credits: List[GameCreditGroup]
+
+
+# New models for missing data
+class GameTechSpec(BaseModel):
+    category: str
+    attribute: str
+    value: str
+
+
+class GameSpecs(BaseModel):
+    game_id: str
+    game_name: str
+    platform: Optional[str] = None
+    minimum_requirements: List[GameTechSpec] = []
+    recommended_requirements: List[GameTechSpec] = []
+    technical_attributes: List[GameTechSpec] = []
+
+
+class GameRating(BaseModel):
+    rating_system: str
+    rating: str
+    content_descriptors: Optional[List[str]] = None
+
+
+class GameReview(BaseModel):
+    reviewer_name: str
+    publication: Optional[str] = None
+    score: Optional[str] = None
+    max_score: Optional[str] = None
+    review_text: Optional[str] = None
+    review_date: Optional[str] = None
+    url: Optional[HttpUrl] = None
+
+
+class GameRatings(BaseModel):
+    game_id: str
+    game_name: str
+    moby_score: Optional[float] = None
+    moby_rank: Optional[float] = None
+    user_rating: Optional[float] = None
+    critic_rating: Optional[float] = None
+    age_ratings: List[GameRating] = []
+    reviews: List[GameReview] = []
+
+
+class GameTrivia(BaseModel):
+    game_id: str
+    game_name: str
+    trivia_entries: List[str] = []
+
+
+class GameRelease(BaseModel):
+    platform: str
+    region: str
+    release_date: Optional[str] = None
+    publisher: Optional[str] = None
+    developer: Optional[str] = None
+    product_code: Optional[str] = None
+    age_rating: Optional[str] = None
+
+
+class GameReleases(BaseModel):
+    game_id: str
+    game_name: str
+    releases: List[GameRelease] = []

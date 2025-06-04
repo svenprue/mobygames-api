@@ -6,6 +6,7 @@ from app.schemas import groups as schemas
 from app.services.groups.search import MobyGamesGroupSearch
 from app.services.groups.profile import MobyGamesGroupProfile
 from app.services.groups.games import MobyGamesGroupGames
+from app.services.groups.trivia import MobyGamesGroupTrivia
 
 router = APIRouter()
 
@@ -29,3 +30,10 @@ def get_group_games(group_id: str, page_number: Optional[int] = 1):
     moby = MobyGamesGroupGames(group_id=group_id, page_number=page_number)
     group_games = moby.get_group_games()
     return group_games
+
+
+@router.get("/{group_id}/trivia", response_model=schemas.GroupTrivia, response_model_exclude_defaults=True)
+def get_group_trivia(group_id: str):
+    moby = MobyGamesGroupTrivia(group_id=group_id)
+    trivia = moby.get_group_trivia()
+    return trivia

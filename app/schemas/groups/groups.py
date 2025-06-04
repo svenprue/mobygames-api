@@ -30,6 +30,9 @@ class GroupMember(BaseModel):
 class GroupProfile(GroupBase):
     description: Optional[str] = None
     members: List[GroupMember]
+    group_type: Optional[str] = None
+    formed: Optional[str] = None
+    status: Optional[str] = None
 
 
 class GroupGame(BaseModel):
@@ -46,3 +49,10 @@ class GroupGames(BaseModel):
     page_number: int
     total_pages: int
     games: List[GroupGame]
+
+
+# New models for missing data
+class GroupTrivia(BaseModel):
+    group_id: str
+    group_name: str
+    trivia_entries: List[str] = []

@@ -25,6 +25,10 @@ class CompanyProfile(CompanyBase):
     overview: Optional[str] = None
     founded: Optional[str] = None
     website: Optional[HttpUrl] = None
+    headquarters: Optional[str] = None
+    status: Optional[str] = None  # Active, Defunct, etc.
+    parent_company: Optional[str] = None
+    employee_count: Optional[str] = None
 
 
 class CompanyGame(BaseModel):
@@ -42,3 +46,21 @@ class CompanyGames(BaseModel):
     page_number: int
     total_pages: int
     games: List[CompanyGame]
+
+
+# New models for missing data
+class CompanyTrivia(BaseModel):
+    company_id: str
+    company_name: str
+    trivia_entries: List[str] = []
+
+
+class CompanyHistoryEntry(BaseModel):
+    date: Optional[str] = None
+    event: str
+
+
+class CompanyHistory(BaseModel):
+    company_id: str
+    company_name: str
+    history_entries: List[CompanyHistoryEntry] = []

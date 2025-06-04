@@ -24,6 +24,8 @@ class CriticSearch(BaseModel):
 class CriticProfile(CriticBase):
     bio: Optional[str] = None
     website: Optional[HttpUrl] = None
+    publication: Optional[str] = None
+    specialization: Optional[List[str]] = None
 
 
 class CriticReview(BaseModel):
@@ -41,3 +43,14 @@ class CriticReviews(BaseModel):
     page_number: int
     total_pages: int
     reviews: List[CriticReview]
+
+
+# New models for missing data
+class CriticStats(BaseModel):
+    critic_id: str
+    critic_name: str
+    total_reviews: Optional[int] = None
+    average_score: Optional[float] = None
+    review_score_distribution: Optional[dict] = None
+    most_reviewed_genres: Optional[List[str]] = None
+    active_years: Optional[str] = None

@@ -24,6 +24,10 @@ class DeveloperSearch(BaseModel):
 class DeveloperProfile(DeveloperBase):
     bio: Optional[str] = None
     known_aliases: Optional[List[str]] = None
+    location: Optional[str] = None
+    founded: Optional[str] = None
+    status: Optional[str] = None
+    team_size: Optional[str] = None
 
 
 class DeveloperCreditGame(BaseModel):
@@ -41,3 +45,21 @@ class DeveloperGames(BaseModel):
     page_number: int
     total_pages: int
     games: List[DeveloperCreditGame]
+
+
+# New models for missing data
+class DeveloperTrivia(BaseModel):
+    developer_id: str
+    developer_name: str
+    trivia_entries: List[str] = []
+
+
+class DeveloperTool(BaseModel):
+    name: str
+    category: str  # Engine, Tool, Library, etc.
+
+
+class DeveloperTools(BaseModel):
+    developer_id: str
+    developer_name: str
+    tools: List[DeveloperTool] = []
