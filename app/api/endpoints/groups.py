@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import APIRouter
 
-from app.schemas import groups as schemas
+from app.schemas.groups import groups as schemas
 from app.services.groups.search import MobyGamesGroupSearch
 from app.services.groups.profile import MobyGamesGroupProfile
 from app.services.groups.games import MobyGamesGroupGames

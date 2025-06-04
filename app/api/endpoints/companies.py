@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import APIRouter
 
-from app.schemas import companies as schemas
+from app.schemas.companies import companies as schemas
 from app.services.companies.search import MobyGamesCompanySearch
 from app.services.companies.profile import MobyGamesCompanyProfile
 from app.services.companies.games import MobyGamesCompanyGames

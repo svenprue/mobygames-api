@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import APIRouter
 
-from app.schemas import critics as schemas
+from app.schemas.critics import critics as schemas
 from app.services.critics.search import MobyGamesCriticSearch
 from app.services.critics.profile import MobyGamesCriticProfile
 from app.services.critics.reviews import MobyGamesCriticReviews

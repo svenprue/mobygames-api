@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import APIRouter
 
-from app.schemas import games as schemas
+from app.schemas.games import games as schemas
 from app.services.games.search import MobyGamesGameSearch
 from app.services.games.profile import MobyGamesGameProfile
 from app.services.games.screenshots import MobyGamesGameScreenshots
