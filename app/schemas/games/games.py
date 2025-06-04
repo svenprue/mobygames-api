@@ -14,12 +14,25 @@ class GameSearchResult(GameBase):
     year: Optional[int] = None
 
 
+class GameBrowseResult(GameBase):
+    year: Optional[int] = None
+    company: Optional[str] = None
+
+
 class GameSearch(BaseModel):
     query: str
     page_number: int
     total_results: int
     total_pages: int
     results: List[GameSearchResult]
+
+
+class GameBrowse(BaseModel):
+    sort_by: str
+    page_number: int
+    total_results: int
+    total_pages: int
+    results: List[GameBrowseResult]
 
 
 class GamePlatform(BaseModel):

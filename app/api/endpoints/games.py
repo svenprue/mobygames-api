@@ -4,6 +4,7 @@ from fastapi import APIRouter
 
 from app.schemas.games import games as schemas
 from app.services.games.search import MobyGamesGameSearch
+from app.services.games.browse import MobyGamesGameBrowse
 from app.services.games.profile import MobyGamesGameProfile
 from app.services.games.screenshots import MobyGamesGameScreenshots
 from app.services.games.credits import MobyGamesGameCredits
@@ -20,6 +21,13 @@ def search_games(game_name: str, page_number: Optional[int] = 1):
     moby = MobyGamesGameSearch(query=game_name, page_number=page_number)
     found_games = moby.search_games()
     return found_games
+
+
+@router.get("/browse", response_model=schemas.GameBrowse, response_model_exclude_none=True)
+def browse_games(page_number: Optional[int] = 1, sort_by: Optional[str] = "date"):
+    moby = MobyGamesGameBrowse(page_number=page_number, sort_by=sort_by)
+    browse_results = moby.browse_games()
+    return browse_results
 
 
 @router.get("/{game_id}/profile", response_model=schemas.GameProfile, response_model_exclude_defaults=True)
