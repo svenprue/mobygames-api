@@ -1,6 +1,6 @@
 class Games:
-    # Updated XPath selectors for actual MobyGames search results
-    SEARCH_RESULTS = "//table[@class='table mb']//tr[position()>1]"  # Skip header row if exists
+    # Updated XPath selectors for actual MobyGames search results table structure
+    SEARCH_RESULTS = "//table[@class='table mb']//tr[td]"  # Only get rows with td elements
     GAME_NAME = ".//td[2]//b/a/text()"
     GAME_URL = ".//td[2]//b/a/@href"
     GAME_ID = ".//td[2]//b/a/@href"
