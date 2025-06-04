@@ -49,6 +49,27 @@ class Companies:
     GAME_YEAR = ".//div[@class='year']/text()"
     GAME_ROLE = ".//div[@class='role']/text()"
 
+class Developers:
+    SEARCH_RESULTS = "//div[@class='searchResult']"
+    DEVELOPER_NAME = ".//div[@class='searchTitle']//a/text()"
+    DEVELOPER_URL = ".//div[@class='searchTitle']//a/@href"
+    DEVELOPER_ID = ".//div[@class='searchTitle']//a/@href"
+    DEVELOPER_GAMES_COUNT = ".//div[@class='searchDetails']/text()"
+
+    # Developer profile
+    NAME = "//div[@id='developerTitle']/h1/text()"
+    BIO = "//div[@id='developerBio']/div[@class='desc']/text()"
+    KNOWN_ALIASES = "//div[@id='developerAliases']//span[@class='alias']/text()"
+
+    # Developer games
+    GAMES_SECTION = "//div[@id='developerGames']"
+    GAME_ENTRIES = ".//div[@class='gameEntry']"
+    GAME_TITLE = ".//div[@class='gameTitle']/a/text()"
+    GAME_URL = ".//div[@class='gameTitle']/a/@href"
+    GAME_PLATFORMS = ".//div[@class='platforms']/span/text()"
+    GAME_YEAR = ".//div[@class='year']/text()"
+    GAME_ROLE = ".//div[@class='role']/text()"
+
 class Groups:
     SEARCH_RESULTS = "//div[@class='searchResult']"
     GROUP_NAME = ".//div[@class='searchTitle']//a/text()"
@@ -91,25 +112,6 @@ class Critics:
     REVIEW_DATE = ".//div[@class='reviewDate']/text()"
     REVIEW_SCORE = ".//div[@class='reviewScore']/text()"
     REVIEW_TEXT = ".//div[@class='reviewText']/text()"
-
-class Players:
-    SEARCH_RESULTS = "//div[@class='searchResult']"
-    PLAYER_NAME = ".//div[@class='searchTitle']//a/text()"
-    PLAYER_URL = ".//div[@class='searchTitle']//a/@href"
-    PLAYER_ID = ".//div[@class='searchTitle']//a/@href"
-    PLAYER_GAMES_COUNT = ".//div[@class='searchDetails']/text()"
-
-    # Player profile
-    NAME = "//div[@id='playerTitle']/h1/text()"
-    BIO = "//div[@id='playerBio']/div[@class='desc']/text()"
-    KNOWN_ALIASES = "//div[@id='playerAliases']//span[@class='alias']/text()"
-
-    # Player credits
-    CREDITS_SECTION = "//div[@id='playerCredits']"
-    CREDIT_ENTRIES = ".//div[@class='creditEntry']"
-    GAME_TITLE = ".//div[@class='gameTitle']/a/text()"
-    GAME_URL = ".//div[@class='gameTitle']/a/@href"
-    ROLES = ".//div[@class='roles']/span/text()"
 
 class Pagination:
     PAGE_NUMBER_LAST = "//li[contains(@class, 'list-item--icon-last-page')]//@href"

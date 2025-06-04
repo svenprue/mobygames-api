@@ -16,34 +16,40 @@ def zip_lists_into_dict(list_keys: list, list_values: list) -> dict:
     return {k: v for k, v in zip(list_keys, list_values)}
 
 
-def extract_from_url(tfmkt_url: Optional[str], element: str = "id") -> Optional[str]:
+def extract_from_url(mobygames_url: Optional[str], element: str = "id") -> Optional[str]:
     """
-    Extract a specific element from a Transfermarkt URL using regular expressions.
+    Extract a specific element from a MobyGames URL using regular expressions.
 
     Args:
-        tfmkt_url (str): The Transfermarkt URL from which to extract the element.
-        element (str, optional): The element to extract (e.g., 'id', 'season_id', 'transfer_id').
+        mobygames_url (str): The MobyGames URL from which to extract the element.
+        element (str, optional): The element to extract (e.g., 'id', 'game_id', 'company_id').
 
     Returns:
         Optional[str]: The extracted element value or None if not found.
     """
-    if not tfmkt_url:
+    if not mobygames_url:
         return None
 
-    regex: str = (
-        r"/(?P<code>[\w%-]+)"
-        r"/(?P<category>[\w-]+)"
-        r"/(?P<type>[\w-]+)"
-        r"/(?P<id>\w+)"
-        r"(/saison_id/(?P<season_id>\d{4}))?"
-        r"(/transfer_id/(?P<transfer_id>\d+))?"
-    )
+    # MobyGames URL patterns
+    patterns = {
+        'game_id': r'/game/(?P<game_id>\d+)',
+        'company_id': r'/company/(?P<company_id>\d+)',
+        'developer_id': r'/developer/(?P<developer_id>\d+)',
+        'person_id': r'/person/(?P<person_id>\d+)',
+        'group_id': r'/group/(?P<group_id>\d+)',
+        'critic_id': r'/critic/(?P<critic_id>\d+)',
+        'platform_id': r'/platform/(?P<platform_id>\d+)',
+    }
 
-    try:
-        groups: dict = re.match(regex, trim(tfmkt_url)).groupdict()
-    except TypeError:
-        return None
-    return groups.get(element)
+    for pattern_name, pattern in patterns.items():
+        if element in pattern_name:
+            try:
+                match = re.search(pattern, trim(mobygames_url))
+                if match:
+                    return match.groupdict().get(element)
+            except (TypeError, AttributeError):
+                continue
+    return None
 
 
 def trim(text: Union[list, str]) -> str:

@@ -1,1 +1,1 @@
-from app.api.endpoints import games, players, companies, groups, critics
+from app.api.endpoints import games, developers, companies, groups, critics

@@ -1,1 +1,1 @@
-from app.schemas import games, players, companies, groups, critics
+from app.schemas import games, developers, companies, groups, critics
