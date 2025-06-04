@@ -13,46 +13,45 @@ class MobyGamesGameSearch(BaseScraper):
         self.base_url = "https://www.mobygames.com"
 
     def _build_url(self) -> str:
-        # Build the search URL with query and pagination
-        return f"{self.base_url}/search/games?q={self.query}&p={self.page_number}"
+        # Use the actual MobyGames search URL format
+        return f"{self.base_url}/search/?q={self.query}&type=game&p={self.page_number}"
 
     def search_games(self) -> Dict:
         url = self._build_url()
         response = self._make_request(url)
 
-        # Parse search results
+        # Parse search results from the table structure
         search_results = response.xpath(Games.SEARCH_RESULTS)
         results = []
 
         for result in search_results:
-            name = self._get_text(result.xpath(Games.GAME_NAME))
-            url_path = self._get_text(result.xpath(Games.GAME_URL))
+            # Extract game name from the bold link
+            name_element = result.xpath(Games.GAME_NAME)
+            name = self._get_text(name_element) if name_element else ""
+
+            # Extract game URL
+            url_element = result.xpath(Games.GAME_URL)
+            url_path = url_element[0] if url_element else ""
+
+            # Extract game ID from URL
             game_id = self._extract_id_from_url(url_path)
 
-            platforms = result.xpath(Games.GAME_PLATFORMS)
-            platforms_list = [platform.strip() for platform in platforms if platform.strip()]
+            # Extract platforms and year from the second column
+            platforms_and_year = result.xpath(Games.GAME_PLATFORMS_AND_YEAR)
+            platforms, year = self._parse_platforms_and_year(platforms_and_year)
 
-            year_text = self._get_text(result.xpath(Games.GAME_YEAR))
-            year = self._extract_year(year_text)
+            if name and url_path:  # Only add if we have essential data
+                results.append({
+                    "name": name,
+                    "url": url_path if url_path.startswith('http') else f"{self.base_url}{url_path}",
+                    "id": game_id,
+                    "platforms": platforms,
+                    "year": year
+                })
 
-            results.append({
-                "name": name,
-                "url": f"{self.base_url}{url_path}",
-                "id": game_id,
-                "platforms": platforms_list,
-                "year": year
-            })
-
-        # Get pagination info
+        # Get pagination info - MobyGames uses different pagination
         total_results = len(results)
-        total_pages = 1
-
-        # Look for pagination info in the page
-        pagination_text = self._get_text(response.xpath("//div[@class='pagination']/text()"))
-        if pagination_text:
-            match = re.search(r'of (\d+)', pagination_text)
-            if match:
-                total_pages = int(match.group(1))
+        total_pages = self._extract_total_pages(response)
 
         return {
             "query": self.query,
@@ -63,16 +62,41 @@ class MobyGamesGameSearch(BaseScraper):
         }
 
     def _extract_id_from_url(self, url: str) -> str:
-        # Extract game ID from URL
+        """Extract game ID from URL like /game/12345/game-name"""
+        if not url:
+            return ""
         match = re.search(r'/game/(\d+)/', url)
-        if match:
-            return match.group(1)
-        return ""
+        return match.group(1) if match else ""
 
-    def _extract_year(self, text: str) -> Optional[int]:
-        # Extract year from text like " (1998)"
-        if text:
-            match = re.search(r'\((\d{4})\)', text)
+    def _parse_platforms_and_year(self, elements: List) -> tuple:
+        """Parse platforms and year from the HTML elements"""
+        platforms = []
+        year = None
+
+        for element in elements:
+            text = element.strip() if isinstance(element, str) else ""
+
+            # Look for year in parentheses like "(March 29, 1996)" or "(1996)"
+            year_match = re.search(r'\(.*?(\d{4})\)', text)
+            if year_match:
+                year = int(year_match.group(1))
+
+            # Look for platform names (usually before the year)
+            # This is simplified - might need refinement based on actual HTML structure
+            if text and not re.search(r'\(\d{4}\)', text) and len(text) < 20:
+                platforms.append(text)
+
+        return platforms, year
+
+    def _extract_total_pages(self, response) -> int:
+        """Extract total number of pages from pagination"""
+        # Look for pagination links or text
+        pagination_elements = response.xpath("//div[@class='pagination']//text() | //nav[@class='pagination']//text()")
+
+        for element in pagination_elements:
+            # Look for pattern like "Page 1 of 25"
+            match = re.search(r'of (\d+)', element)
             if match:
                 return int(match.group(1))
-        return None
+
+        return 1  # Default to 1 page if pagination not found

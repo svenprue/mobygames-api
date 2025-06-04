@@ -1,11 +1,13 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, List, Union
 from xml.etree import ElementTree
+import time
+import random
 
-import requests
+import cloudscraper
 from bs4 import BeautifulSoup
 from fastapi import HTTPException
-from lxml import etree
+from lxml import etree, html
 from requests import Response, TooManyRedirects
 
 from app.utils.utils import trim
@@ -29,7 +31,7 @@ class MobyGamesBase:
 
     def make_request(self, url: Optional[str] = None) -> Response:
         """
-        Make an HTTP GET request to the specified URL.
+        Make an HTTP GET request to the specified URL using cloudscraper.
 
         Args:
             url (str, optional): The URL to make the request to. If not provided, the class's URL
@@ -43,17 +45,24 @@ class MobyGamesBase:
                 server error status code.
         """
         url = self.URL if not url else url
+
+        # Create cloudscraper session
+        scraper = cloudscraper.create_scraper(
+            browser={
+                'browser': 'chrome',
+                'platform': 'windows',
+                'desktop': True
+            }
+        )
+
         try:
-            response: Response = requests.get(
+            # Add random delay to avoid rate limiting
+            time.sleep(random.uniform(1, 3))
+
+            response: Response = scraper.get(
                 url=url,
-                headers={
-                    "User-Agent": (
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                        "AppleWebKit/537.36 (KHTML, like Gecko) "
-                        "Chrome/113.0.0.0 "
-                        "Safari/537.36"
-                    ),
-                },
+                timeout=30,
+                allow_redirects=True
             )
         except TooManyRedirects:
             raise HTTPException(status_code=404, detail=f"Not found for url: {url}")
@@ -61,6 +70,7 @@ class MobyGamesBase:
             raise HTTPException(status_code=500, detail=f"Connection error for url: {url}")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error for url: {url}. {e}")
+
         if 400 <= response.status_code < 500:
             raise HTTPException(
                 status_code=response.status_code,
@@ -149,13 +159,13 @@ class MobyGamesBase:
         return elements_valid or []
 
     def get_text_by_xpath(
-        self,
-        xpath: str,
-        pos: int = 0,
-        iloc: Optional[int] = None,
-        iloc_from: Optional[int] = None,
-        iloc_to: Optional[int] = None,
-        join_str: Optional[str] = None,
+            self,
+            xpath: str,
+            pos: int = 0,
+            iloc: Optional[int] = None,
+            iloc_from: Optional[int] = None,
+            iloc_to: Optional[int] = None,
+            join_str: Optional[str] = None,
     ) -> Optional[str]:
         """
         Extract text content from the web page using the specified XPath expression.
@@ -205,35 +215,28 @@ class MobyGamesBase:
             return None
 
 
-import time
-from typing import List, Optional, Union
-
-import requests
-from lxml import html
-
-
 class BaseScraper:
     def __init__(self):
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
-            'Cache-Control': 'max-age=0',
-        }
+        # Create a persistent cloudscraper session for better performance
+        self.scraper = cloudscraper.create_scraper(
+            browser={
+                'browser': 'chrome',
+                'platform': 'windows',
+                'desktop': True
+            }
+        )
 
     def _make_request(self, url: str) -> html.HtmlElement:
-        """Make HTTP request to URL and return HTML element"""
+        """Make HTTP request to URL using cloudscraper and return HTML element"""
         try:
-            response = requests.get(url, headers=self.headers)
+            # Add a small delay to be respectful to the server
+            time.sleep(random.uniform(1, 2))
+
+            response = self.scraper.get(url, timeout=30)
             response.raise_for_status()
 
-            # Add a small delay to be respectful to the server
-            time.sleep(1)
-
             return html.fromstring(response.content)
-        except requests.exceptions.RequestException as e:
+        except Exception as e:
             # In production, you'd want better error handling
             print(f"Error making request to {url}: {e}")
             # Return an empty HTML element
